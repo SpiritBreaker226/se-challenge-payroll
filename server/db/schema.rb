@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_27_205120) do
+ActiveRecord::Schema.define(version: 2020_08_27_214234) do
 
   create_table "employees", force: :cascade do |t|
     t.string "employee_id", limit: 50, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "job_groups", force: :cascade do |t|
+    t.string "name", limit: 50, null: false
+    t.decimal "hour_rate", precision: 8, scale: 2, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
