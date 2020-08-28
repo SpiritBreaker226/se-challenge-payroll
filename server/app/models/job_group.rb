@@ -1,4 +1,6 @@
 class JobGroup < ApplicationRecord
+  has_many :payrolls
+
   validates :name, :hour_rate, presence: true
 
   validates :name, uniqueness: true

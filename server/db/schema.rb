@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_27_214234) do
+ActiveRecord::Schema.define(version: 2020_08_28_002759) do
 
   create_table "employees", force: :cascade do |t|
     t.string "employee_id", limit: 50, null: false
@@ -25,4 +25,18 @@ ActiveRecord::Schema.define(version: 2020_08_27_214234) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "payrolls", force: :cascade do |t|
+    t.date "payroll_date", null: false
+    t.decimal "hours", precision: 2, scale: 2, null: false
+    t.integer "payroll_id", null: false
+    t.integer "employee_id", null: false
+    t.integer "job_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["employee_id"], name: "index_payrolls_on_employee_id"
+    t.index ["job_group_id"], name: "index_payrolls_on_job_group_id"
+  end
+
+  add_foreign_key "payrolls", "employees"
+  add_foreign_key "payrolls", "job_groups"
 end
