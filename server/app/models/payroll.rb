@@ -14,4 +14,6 @@ class Payroll < ApplicationRecord
       unless: Proc.new { |payroll| payroll.payroll_id.blank? }
     },
     presence: { message: "Id can't be blank" }
+
+  alias_attribute :identifier, :payroll_id
 end
