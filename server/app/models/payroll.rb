@@ -16,4 +16,5 @@ class Payroll < ApplicationRecord
     presence: { message: "Id can't be blank" }
 
   alias_attribute :identifier, :payroll_id
+  alias_attribute :date, :payroll_date
 end
