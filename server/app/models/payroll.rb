@@ -20,6 +20,7 @@ class Payroll < ApplicationRecord
 
   def self.add_data_from_csv(file)
     errors = []
+    successful_payrolls = []
     payroll_id = Payroll.get_payroll_id_from_filename(file)
     current_payroll = Payroll.where(payroll_id: payroll_id)
 
@@ -33,7 +34,7 @@ class Payroll < ApplicationRecord
       employee = Employee.find_by_employee_id(row['employee id'])
       job_group = JobGroup.find_by_name(row['job group'])
 
-      payroll = Payroll.create(
+      payroll = Payroll.new(
         employee: employee,
         job_group: job_group,
         payroll_date: row['date'],
@@ -41,13 +42,19 @@ class Payroll < ApplicationRecord
         payroll_id: payroll_id
       )
 
-      if payroll.errors.count > 0
+      if payroll.valid?
+        successful_payrolls.push(payroll)
+      else
         errors.push({
           employee_id: row['employee id'],
           date: row['date'],
           errors: payroll.errors.full_messages
         })
       end
+    end
+
+    if errors.count == 0
+      successful_payrolls.each { |successful_payroll| successful_payroll.save }
     end
 
     return errors
