@@ -12,10 +12,12 @@ RSpec.describe Payroll, type: :model do
       end
 
       context 'on adding rows' do
-        it 'returns nothing' do
+        it 'returns empty array for sussessful' do
           create(:employee, employee_id: '1')
 
-          Payroll.add_data_from_csv(file)
+          errors = Payroll.add_data_from_csv(file)
+
+          expect(errors).to be_empty
 
           first_payroll = Payroll.first
 
@@ -26,6 +28,26 @@ RSpec.describe Payroll, type: :model do
           expect(first_payroll.employee.identifier).to eq('1')
           expect(first_payroll.job_group.name).to eq('A')
         end
+      end
+
+      context 'on error' do
+        it 'returns an array with an error message' do
+          errors = Payroll.add_data_from_csv(file)
+
+          expect(errors.count).to eq(2)
+          expect(errors.first).to include(:errors, :date, :employee_id)
+        end
+      end
+    end
+
+    context 'on duplicated Payroll Id' do
+      it 'returns an array with a message of duplicated payroll id' do
+        create(:payroll, payroll_id: 79)
+
+        errors = Payroll.add_data_from_csv(file)
+
+        expect(errors.count).to eq(1)
+        expect(errors.first).to include('already in use')
       end
     end
   end
