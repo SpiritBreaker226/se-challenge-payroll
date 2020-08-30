@@ -1,6 +1,13 @@
 class PayrollsController < ApplicationController
   def create
-    errors = Payroll.add_data_from_csv(payroll_params[:file])
+    file = payroll_params[:file]
+
+    unless file.content_type == 'text/csv'
+      render status: :unsupported_media_type
+      return
+    end
+
+    errors = Payroll.add_data_from_csv(file)
 
     if errors.count == 0
       render status: :created

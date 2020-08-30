@@ -42,5 +42,15 @@ RSpec.describe "Payrolls", type: :request do
         end
       end
     end
+
+    context 'on non-CSV files' do
+      it 'should return a 415 response' do
+        non_csv_file = fixture_file_upload('time-report-79.csv', 'text/plain')
+
+        post '/payrolls', params: { upload: { file: non_csv_file } }
+
+        expect(response).to have_http_status(:unsupported_media_type)
+      end
+    end
   end
 end
